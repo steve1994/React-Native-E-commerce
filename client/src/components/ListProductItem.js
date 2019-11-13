@@ -6,6 +6,7 @@ export default class ListProductItem extends React.Component {
 
     constructor(props) {
         super(props);
+        this.clickDetailItem = this.clickDetailItem.bind(this);
     }
 
     // averageRate(rateHistory) {
@@ -17,8 +18,14 @@ export default class ListProductItem extends React.Component {
     //     return sum / length;
     // }
 
+    clickDetailItem() {
+        // this.props.navigation.navigate('Detail', {idProduct : this.props.origin_id});
+        this.props.clickDetail(this.props.origin_id);
+    }
+
     render() {
         // let accumulativeRate = this.averageRate(this.props.rate);
+
         return (
           <View>
             <View>
@@ -41,7 +48,7 @@ export default class ListProductItem extends React.Component {
                 <Text>{this.props.description}</Text>
               </View>
               <View>
-                <Button onPress={()=>this.props.navigation.navigate('Detail', {idProduct : this.props.origin_id})}>DETAIL ITEM</Button>
+                <Button onPress={this.clickDetailItem} title='DETAIL ITEM' />
               </View>
             </View>
           </View>

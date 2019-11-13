@@ -59,7 +59,7 @@ class DetailProduct extends React.Component {
                         </View>
 
                         <View>
-                            <Button onPress={this.submitVote}>Vote</Button>
+                            <Button onPress={this.submitVote} title="VOTE" />
                         </View>
                     </View>
 
@@ -68,6 +68,10 @@ class DetailProduct extends React.Component {
                         <View>
                             <Text>{this.props.detailProduct.detailProduct}</Text>
                         </View>
+                    </View>
+
+                    <View>
+                        <Button onPress={()=>{this.props.navigation.navigate('Home')}} title='BACK' />
                     </View>
                 </View>
             </View>

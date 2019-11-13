@@ -1,12 +1,12 @@
-import axios from 'axios';
+// import axios from 'axios';
 var path = require('path');
 
-const API_URL = 'http://localhost:3002/api/'
+const API_URL = 'http://192.168.1.24:3002/api/'
 
-const request = axios.create({
-    baseURL: API_URL,
-    timeout: 1000
-})
+// const request = axios.create({
+//     baseURL: API_URL,
+//     timeout: 1000
+// })
 
 // LOAD PRODUCTS
 
@@ -21,11 +21,12 @@ export const loadProductFailure = () => ({
 
 export const loadProduct = (limit,numPage) => {
     return dispatch => {
-        return request.get(`products/${limit}/${numPage}`)
-        .then(function(response) {
-            dispatch(loadProductSuccess(response.data));
+        return fetch(`${API_URL}products/${limit}/${numPage}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            dispatch(loadProductSuccess(responseJson))
         })
-        .catch(function(error) {
+        .catch((error) => {
             console.error(error);
             dispatch(loadProductFailure());
         })
@@ -45,11 +46,12 @@ export const loadNextPageFailure = () => ({
 
 export const loadNextPage = (limit,numPage) => {
     return dispatch => {
-        return request.get(`products/${limit}/${numPage}`)
-        .then(function(response) {
-            dispatch(loadNextPageSuccess(response.data));
+        return fetch(`${API_URL}products/${limit}/${numPage}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            dispatch(loadNextPageSuccess(responseJson));
         })
-        .catch(function(error) {
+        .catch((error) => {
             console.error(error);
             dispatch(loadNextPageFailure());
         })
@@ -68,20 +70,23 @@ export const postProductFailed = () => ({
 
 export const postProduct = (title,rate,description,price,brand,detailProduct) => {
     return dispatch => {
-        return request.post('products',{title,rate,description,price,brand,detailProduct})
-        .then(function(response) {
-            // let idProduct = response.data.data._id;
-            // let formData = new FormData();
-            // formData.append('files',imageProduct);
-            // return request.put(`products/upload/${idProduct}`,formData)
-            // .then(function(response) {
-                return request.get('products/7/1')
-                .then(function(response) {
-                    dispatch(postProductSuccess(response.data));
-                })
-            // })
+        return fetch(`${API_URL}products`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({title,rate,description,price,brand,detailProduct})
         })
-        .catch(function(error) {
+        .then((response) => response.json())
+        .then((responseJson) => {
+            return fetch(`${API_URL}products/7/1`)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                dispatch(postProductSuccess(responseJson));
+            })
+        })
+        .catch((error) => {
             console.error(error);
             dispatch(postProductFailed());
         })
@@ -103,11 +108,19 @@ export const postImage = (idProduct,fileImages) => {
         for (let i=0;i<fileImages.length;i++) {
             let formData = new FormData();
             formData.append('files',fileImages[i]);
-            return request.put(`products/upload/${idProduct}`,formData)
-            .then(function(response) {
-                dispatch(postImageSuccess(response.data.data));
+            return fetch(`${API_URL}products/upload/${idProduct}`,{
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: formData
             })
-            .catch(function(error) {
+            .then((response) => response.json())
+            .then((responseJson) => {
+                dispatch(postImageSuccess(responseJson.data));
+            })
+            .catch((error) => {
                 dispatch(postImageFailed());
             })
         }
@@ -126,11 +139,12 @@ export const viewProductFailure = () => ({
 
 export const viewProduct = (idProduct) => {
     return dispatch => {
-        return request.get(`products/${idProduct}`)
-        .then(function(response) {
-            dispatch(viewProductSuccess(response.data.data));
+        return fetch(`${API_URL}products/${idProduct}`)
+        .then((response) => response.json())
+        .then((responseJson) => {
+            dispatch(viewProductSuccess(responseJson.data));
         })
-        .catch(function(error) {
+        .catch((error) => {
             console.error(error);
             dispatch(viewProductFailure());
         })
@@ -149,12 +163,19 @@ export const voteProductFailure = () => ({
 
 export const voteProduct = (idProduct, vote) => {
     return dispatch => {
-        return request.put(`products/${idProduct}/${vote}`)
-        .then(function(response) {
-            dispatch(voteProductSuccess(response.data.data));
+        return fetch(`${API_URL}products/${idProduct}/${vote}`,{
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            dispatch(voteProductSuccess(responseJson.data));
             alert('Thank you for your votes!');
         })
-        .catch(function (error) {
+        .catch((error) => {
             console.error(error);
             dispatch(voteProductFailure());
         })

@@ -9,6 +9,7 @@ class ListProduct extends React.Component {
     constructor(props) {
         super(props);
         this.state = {pageNum:2};
+        this.loadMore = this.loadMore.bind(this);
     }
 
     componentDidMount() {
@@ -24,12 +25,20 @@ class ListProduct extends React.Component {
     }
 
     render() {
-        // let listItem = this.props.products.map((item,index) => {
-        //     return (<ListProductItem key={index} imagePath={item.imageProduct} origin_id={item._id} rate={item.rate} title={item.title} price={item.price} description={item.description} />);
-        // });
         return (
             <View>
-                <FlatList data={this.props.products} renderItem={({item,index}) => <ListProductItem  key={index} imagePath={item.imageProduct} origin_id={item._id} rate={item.rate} title={item.title} price={item.price} description={item.description} />} />
+                <FlatList data={this.props.products}
+                          onEndReached={this.loadMore}
+                          onEndReachedThreshold={0.5}
+                          renderItem={({item,index}) =>
+                              <ListProductItem clickDetail={this.props.clickDetailItem}
+                                                key={index}
+                                                imagePath={item.imageProduct}
+                                                origin_id={item._id}
+                                                rate={item.rate}
+                                                title={item.title}
+                                                price={item.price}
+                                                description={item.description} />} />
             </View>
         );
     }
