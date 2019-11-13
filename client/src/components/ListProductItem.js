@@ -29,7 +29,7 @@ export default class ListProductItem extends React.Component {
         return (
           <View>
             <View>
-                <Image source={{uri:'https://bit.ly/1myplK1'}} />
+                <Image source={{uri:'https://bit.ly/1myplK1'}} style={{width:200,height:200}} />
             </View>
             <View>
               <View>
