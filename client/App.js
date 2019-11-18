@@ -36,6 +36,7 @@ import thunk from 'redux-thunk';
 import OneWindow from './src/components/OneWindow';
 import AddProduct from './src/components/AddProduct';
 import DetailProduct from './src/components/DetailProduct';
+import TestCamera from './src/components/TestCamera';
 
 const store = createStore(rootReducer,applyMiddleware(thunk));
 
