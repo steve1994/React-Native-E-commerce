@@ -30,7 +30,7 @@ export default class ListProductItem extends React.Component {
         return (
           <View>
             <View>
-                <Image source={{uri:'https://bit.ly/1myplK1'}} style={{width:200,height:200}} />
+                <Image source={{uri:'https://bit.ly/1myplK1'}} style={{width:200,height:250}} />
             </View>
             <View>
               <View>
@@ -49,7 +49,7 @@ export default class ListProductItem extends React.Component {
                     ratingCount={5}
                     imageSize={30}
                     readonly={true}
-                    startingValue={`${accumulativeRate}`} />
+                    startingValue={parseFloat(`${accumulativeRate}`)} />
                 </View>
               </View>
               <View>
