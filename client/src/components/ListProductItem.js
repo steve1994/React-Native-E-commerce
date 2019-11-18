@@ -45,7 +45,7 @@ export default class ListProductItem extends React.Component {
                 <Text>Rate</Text>
                 <View>
                     <Rating
-                    type='heart'
+                    type='star'
                     ratingCount={5}
                     imageSize={30}
                     readonly={true}
