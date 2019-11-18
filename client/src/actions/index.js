@@ -69,7 +69,7 @@ export const postProductFailed = () => ({
     type: 'POST_PRODUCT_FAILURE'
 })
 
-export const postProduct = (title,rate,description,price,brand,detailProduct) => {
+export const postProduct = (title,rate,description,price,brand,detailProduct,fileImages) => {
     return dispatch => {
         return fetch(`${API_URL}products`, {
             method: 'POST',
@@ -81,14 +81,32 @@ export const postProduct = (title,rate,description,price,brand,detailProduct) =>
         })
         .then((response) => response.json())
         .then((responseJson) => {
-            return fetch(`${API_URL}products/7/1`)
+            let idProduct = responseJson.data._id;
+            let formData = new FormData();
+            formData.append('files',{
+                type: fileImages[0].mime,
+                uri: fileImages[0].path,
+                name: 'photo'
+            });
+            return fetch(`${API_URL}products/upload/${idProduct}`,{
+                method: 'PUT',
+                body: formData
+            })
             .then((response) => response.json())
             .then((responseJson) => {
-                dispatch(postProductSuccess(responseJson));
+                return fetch(`${API_URL}products/7/1`)
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    dispatch(postProductSuccess(responseJson));
+                })
+            })
+            .catch((error) => {
+                console.log(error);
+                dispatch(postProductFailed());
             })
         })
         .catch((error) => {
-            console.error(error);
+            console.log(error);
             dispatch(postProductFailed());
         })
     }
@@ -105,26 +123,28 @@ export const postImageFailed = () => ({
 })
 
 export const postImage = (idProduct,fileImages) => {
+    console.log('File Images : ', fileImages[0].path);
     return dispatch => {
-        for (let i=0;i<fileImages.length;i++) {
-            let formData = new FormData();
-            formData.append('files',fileImages[i]);
-            return fetch(`${API_URL}products/upload/${idProduct}`,{
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: formData
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                dispatch(postImageSuccess(responseJson.data));
-            })
-            .catch((error) => {
-                dispatch(postImageFailed());
-            })
-        }
+        let formData = new FormData();
+        formData.append('files',{
+            uri: fileImages[0].path
+        });
+        return fetch(`${API_URL}products/upload/${idProduct}`,{
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: formData
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            dispatch(postImageSuccess(responseJson.data));
+        })
+        .catch((error) => {
+            console.log(error);
+            dispatch(postImageFailed());
+        })
     }
 }
 

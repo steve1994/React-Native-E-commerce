@@ -6,7 +6,7 @@ const Product = require('../model/products')
 router.put('/upload/:idProduct', function (req,res) {
     let idProduct = req.params.idProduct;
     let uploadedFile = req.files ? req.files.files : null;
-    let fileName = req.files ? (Date.now() + '_' + req.files.files.name) : null;
+    let fileName = req.files ? (Date.now() + '_photo.jpg') : null;
     if (uploadedFile) {
         uploadedFile.mv(path.join(__dirname,`../public/images/uploaded_image/${fileName}`), function (err) {
             if (err) {

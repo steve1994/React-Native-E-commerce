@@ -42,6 +42,8 @@ target 'reactNativeEcommerce' do
 
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
 
+  pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
+
   target 'reactNativeEcommerceTests' do
     inherit! :search_paths
     # Pods for testing

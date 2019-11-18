@@ -15,12 +15,13 @@ import {
   FormLabel,
   FormInput
 } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
 
 class AddProduct extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {title:'',rate:'1',description:'',price:'',brand:'',detailProduct:''};
+        this.state = {title:'',rate:'1',description:'',price:'',brand:'',detailProduct:'',imagePaths:''};
         this.handleTitle = this.handleTitle.bind(this);
         this.handleDescription = this.handleDescription.bind(this);
         this.handlePrice = this.handlePrice.bind(this);
@@ -29,6 +30,7 @@ class AddProduct extends React.Component {
         this.handleImageProduct = this.handleImageProduct.bind(this);
         this.cancelButtonAction = this.cancelButtonAction.bind(this);
         this.addButtonAction = this.addButtonAction.bind(this);
+        this.pickSingleWithCamera = this.pickSingleWithCamera.bind(this);
     }
 
     handleTitle(value) {
@@ -61,19 +63,38 @@ class AddProduct extends React.Component {
     }
 
     addButtonAction() {
+        let arrayImages = [];
+        arrayImages.push(this.state.imagePaths);
         this.props.postProduct(this.state.title
                               ,this.state.rate
                               ,this.state.description
                               ,this.state.price
                               ,this.state.brand
-                              ,this.state.detailProduct);
-        this.setState({title:'',rate:'1',description:'',price:'',brand:'',detailProduct:''})
+                              ,this.state.detailProduct
+                              ,arrayImages);
+        this.setState({title:'',rate:'1',description:'',price:'',brand:'',detailProduct:'',imagePaths:''})
         this.props.navigation.navigate('Home');
     }
 
+    pickSingleWithCamera() {
+        ImagePicker.openCamera({
+            cropping: true,
+            width: 500,
+            height: 500,
+            mediaType:'photo'
+        }).then(image => {
+            this.setState({imagePaths:image});
+        }).catch(e => alert(e));
+    }
+
     render() {
+        console.log(this.state.imagePaths);
         return (
           <View>
+              <View>
+                  { /*<Image source={{uri:this.state.imagePaths}} style={{width:200,height:200}} /> */ }
+                  <Button title='Choose Image' onPress={this.pickSingleWithCamera} />
+              </View>
               <View>
                   <Text>Title</Text>
                   <View>
@@ -130,7 +151,7 @@ class AddProduct extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    postProduct: (title,rate,description,price,brand,detailProduct) => dispatch(postProduct(title,rate,description,price,brand,detailProduct))
+    postProduct: (title,rate,description,price,brand,detailProduct,fileImages) => dispatch(postProduct(title,rate,description,price,brand,detailProduct,fileImages))
 });
 
 export default connect(
