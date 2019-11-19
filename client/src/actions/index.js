@@ -83,11 +83,14 @@ export const postProduct = (title,rate,description,price,brand,detailProduct,fil
         .then((responseJson) => {
             let idProduct = responseJson.data._id;
             let formData = new FormData();
-            formData.append('files',{
-                type: fileImages[0].mime,
-                uri: fileImages[0].path,
-                name: 'photo'
-            });
+            console.log('ACTION GAMBAR : ', fileImages);
+            for (let i=0;i<fileImages.length;i++) {
+                formData.append('files',{
+                    type: fileImages[i].mime,
+                    uri: fileImages[i].path,
+                    name: 'photo'
+                });
+            }
             return fetch(`${API_URL}products/upload/${idProduct}`,{
                 method: 'PUT',
                 body: formData

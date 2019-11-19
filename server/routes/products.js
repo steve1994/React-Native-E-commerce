@@ -5,34 +5,40 @@ const Product = require('../model/products')
 
 router.put('/upload/:idProduct', function (req,res) {
     let idProduct = req.params.idProduct;
-    let uploadedFile = req.files ? req.files.files : null;
-    let fileName = req.files ? (Date.now() + '_photo.jpg') : null;
-    if (uploadedFile) {
-        uploadedFile.mv(path.join(__dirname,`../public/images/uploaded_image/${fileName}`), function (err) {
-            if (err) {
-                res.status(400).json({status:'failed',error:err})
-            } else {
-                Product.find({_id:idProduct})
-                .exec(function (err,response) {
-                    if (err) {
-                        res.status(400).json({status:'failed',error:err})
-                    } else {
-                        let arrayImage = response[0].imageProduct;
-                        arrayImage.push(fileName);
-                        Product.findOneAndUpdate({_id:idProduct},{imageProduct:arrayImage},function (err,response) {
-                            if (err) {
-                                res.status(400).json({status:'failed',error:err});
-                            } else {
-                                res.status(201).json({status:'success',data:response});
-                            }
-                        })
-                    }
-                })
-            }
-        })
-    } else {
-        res.status(400).json({status:'failed',error:'file uploaded is empty'});
+    let fileNames = [];
+    for (let i=0;i<req.files.files.length;i++) {
+        let uploadedFile = req.files.files[i] ? req.files.files[i] : null;
+        let fileName = req.files.files[i] ? (Date.now() + '_photo.jpg') : null;
+        fileNames.push(fileName);
+        if (uploadedFile) {
+            uploadedFile.mv(path.join(__dirname,`../public/images/uploaded_image/${fileName}`), function (err) {
+                if (err) {
+                    res.status(400).json({status:'failed',error:err})
+                }
+            })
+        } else {
+            res.status(400).json({status:'failed',error:'file uploaded is empty'});
+        }
     }
+    console.log('LIST FILE NAME : ', fileNames);
+    Product.find({_id:idProduct})
+    .exec(function (err,response) {
+        if (err) {
+            res.status(400).json({status:'failed',error:err})
+        } else {
+            let arrayImage = response[0].imageProduct;
+            for (let i=0;i<fileNames.length;i++) {
+                arrayImage.push(fileNames[i]);
+            }
+            Product.findOneAndUpdate({_id:idProduct},{imageProduct:arrayImage},function (err,response) {
+                if (err) {
+                    res.status(400).json({status:'failed',error:err});
+                } else {
+                    res.status(201).json({status:'success',data:response});
+                }
+            })
+        }
+    })
 })
 
 router.delete('/remove_upload/:idProduct/:fileName', function (req,res) {
