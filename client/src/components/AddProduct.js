@@ -13,15 +13,17 @@ import {
   View,
   Button,
   FormLabel,
-  FormInput
+  FormInput,
+  ScrollView
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
+import Slideshow from 'react-native-image-slider-show';
 
 class AddProduct extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {title:'',rate:'1',description:'',price:'',brand:'',detailProduct:'',imagePaths:''};
+        this.state = {title:'',rate:'1',description:'',price:'',brand:'',detailProduct:'',imagePaths:[]};
         this.handleTitle = this.handleTitle.bind(this);
         this.handleDescription = this.handleDescription.bind(this);
         this.handlePrice = this.handlePrice.bind(this);
@@ -64,7 +66,9 @@ class AddProduct extends React.Component {
 
     addButtonAction() {
         let arrayImages = [];
-        arrayImages.push(this.state.imagePaths);
+        for (let i=0;i<this.state.imagePaths.length;i++) {
+            arrayImages.push(this.state.imagePaths[i]);
+        }
         this.props.postProduct(this.state.title
                               ,this.state.rate
                               ,this.state.description
@@ -83,15 +87,20 @@ class AddProduct extends React.Component {
             height: 500,
             mediaType:'photo'
         }).then(image => {
-            this.setState({imagePaths:image});
+            this.setState({imagePaths:[...this.state.imagePaths,image]});
         }).catch(e => alert(e));
     }
 
     render() {
+        // For Image Slider displayed
+        let listUrlImages = [];
+        for (let i=0;i<this.state.imagePaths.length;i++) {
+            listUrlImages.push({url:`${this.state.imagePaths[i].path}`});
+        }
         return (
-          <View>
+          <ScrollView>
               <View>
-                  { /*<Image source={{uri:this.state.imagePaths}} style={{width:200,height:200}} /> */ }
+                  <Slideshow dataSource = {listUrlImages} />
                   <Button title='Choose Image' onPress={this.pickSingleWithCamera} />
               </View>
               <View>
@@ -144,7 +153,7 @@ class AddProduct extends React.Component {
                       <Button onPress={this.cancelButtonAction} title="Cancel" />
                   </View>
               </View>
-          </View>
+          </ScrollView>
         )
     }
 }
