@@ -38,6 +38,7 @@ import AddProduct from './src/components/AddProduct';
 import DetailProduct from './src/components/DetailProduct';
 import TestCamera from './src/components/TestCamera';
 import TestPlusButton from './src/components/TestPlusButton';
+import TestSliderImage from './src/components/TestSliderImage';
 
 const store = createStore(rootReducer,applyMiddleware(thunk));
 

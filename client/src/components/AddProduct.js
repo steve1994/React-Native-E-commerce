@@ -88,7 +88,6 @@ class AddProduct extends React.Component {
     }
 
     render() {
-        console.log(this.state.imagePaths);
         return (
           <View>
               <View>

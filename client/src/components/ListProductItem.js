@@ -4,6 +4,7 @@ import React from 'react';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 import {NavigatorIOS, Platform, StyleSheet, Text, Image, FlatList, View, Button} from 'react-native';
+import Slideshow from 'react-native-image-slider-show';
 
 export default class ListProductItem extends React.Component {
 
@@ -26,11 +27,17 @@ export default class ListProductItem extends React.Component {
     }
 
     render() {
+        // For calculating average rate
         let accumulativeRate = this.averageRate(this.props.rate);
+        // For Image Slider displayed
+        let listUrlImages = [];
+        for (let i=0;i<this.props.imagePath.length;i++) {
+            listUrlImages.push({url:`http://192.168.1.24:3002/images/uploaded_image/${this.props.imagePath[i]}`});
+        }
         return (
           <View>
             <View>
-                <Image source={{uri:'https://bit.ly/1myplK1'}} style={{width:200,height:250}} />
+                <Slideshow dataSource = {listUrlImages} />
             </View>
             <View>
               <View>

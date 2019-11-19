@@ -12,7 +12,7 @@ import {
     View,
     Button
 } from 'react-native';
-
+import Slideshow from 'react-native-image-slider-show';
 
 class DetailProduct extends React.Component {
 
@@ -32,12 +32,16 @@ class DetailProduct extends React.Component {
         this.setState({vote:"1"});
     }
 
+    functionUrlImages(item,index) {
+        return {url:`http://192.168.1.24:3002/images/uploaded_image/${item}`};
+    }
+
     render() {
         return (
           <View>
             	<View>
                    <View>
-                        <Image source={{uri:'https://ak1.ostkcdn.com/images/products/8818677/Samsung-Galaxy-S4-I337-16GB-AT-T-Unlocked-GSM-Android-Cell-Phone-85e3430e-6981-4252-a984-245862302c78_600.jpg'}} />
+                        <Slideshow dataSource = {this.props.detailProduct.imageProduct.map((item,index)=>{return {url:`http://192.168.1.24:3002/images/uploaded_image/${item}`}})} />
                     </View>
                     <View>
                         <Text>{this.props.detailProduct.title}</Text>
