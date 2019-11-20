@@ -3,12 +3,22 @@ var router = express.Router();
 var path = require('path');
 const Product = require('../model/products')
 
+function randomString(length) {
+   var result           = '';
+   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
+}
+
 router.put('/upload/:idProduct', function (req,res) {
     let idProduct = req.params.idProduct;
     let fileNames = [];
     for (let i=0;i<req.files.files.length;i++) {
         let uploadedFile = req.files.files[i] ? req.files.files[i] : null;
-        let fileName = req.files.files[i] ? (Date.now() + '_photo.jpg') : null;
+        let fileName = req.files.files[i] ? (randomString(12) + '_photo.jpg') : null;
         fileNames.push(fileName);
         if (uploadedFile) {
             uploadedFile.mv(path.join(__dirname,`../public/images/uploaded_image/${fileName}`), function (err) {
