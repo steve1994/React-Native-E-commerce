@@ -32,10 +32,6 @@ class DetailProduct extends React.Component {
         this.setState({vote:"1"});
     }
 
-    functionUrlImages(item,index) {
-        return {url:`http://192.168.1.24:3002/images/uploaded_image/${item}`};
-    }
-
     render() {
         return (
           <View>
